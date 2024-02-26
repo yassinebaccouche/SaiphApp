@@ -64,6 +64,7 @@ class _Tala3niMainMenuState extends State<Tala3niMainMenu> {
 
   @override
   Widget build(BuildContext context) {
+
     // Get user game details + username and pic
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -100,8 +101,9 @@ class _Tala3niMainMenuState extends State<Tala3niMainMenu> {
                             flex: 6,
                             child: UserHeader(
                               image: 'assets/images/profile_pic.png',
-                              fullname: username,
-                              score: userScore,
+                              fullname: userProvider.getUser.pseudo,
+
+                              score: int.parse( userProvider.getUser.FullScore),
                             ),
                           ),
                           Expanded(
