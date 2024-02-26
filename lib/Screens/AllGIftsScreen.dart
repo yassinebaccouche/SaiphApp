@@ -1,9 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:saiphappfinal/Models/Gift.dart';
 import 'package:saiphappfinal/providers/user_provider.dart';
 import 'package:saiphappfinal/resources/firestore_methods.dart';
 import 'package:provider/provider.dart';
+
+// Define GiftManager outside the _AllGiftsScreenState class
+class GiftManager {
+  Future<List<GiftModel>> getAllGifts() {
+    return FireStoreMethods().getAllGifts();
+  }
+
+  Future<String> claimGift(String giftCard, String userFullScore, String userId) async {
+    try {
+      // Fetch gift by code
+      DocumentSnapshot giftSnapshot = await FirebaseFirestore.instance
+          .collection('gifts').doc(giftCard).get();
+
+      // Check if the gift document exists
+      if (!giftSnapshot.exists) {
+        return 'Gift not found';
+      }
+
+      Map<String, dynamic> giftData = giftSnapshot.data() as Map<String, dynamic>;
+      bool isUsed = giftData['isUsed'] ?? false;
+      if (isUsed) {
+        return 'Gift is already used';
+      }
+
+      int pointsRequired = int.parse(giftData['points'] ?? '0');
+      int userScore = int.parse(userFullScore);
+
+      // Check if the user has enough points to claim the gift
+      if (userScore < pointsRequired) {
+        return 'Insufficient points to claim the gift';
+      }
+
+      int newFullScore = userScore - pointsRequired;
+
+      // Update user's full score
+      await FirebaseFirestore.instance.collection('users')
+          .doc(userId) // Use the actual user ID
+          .update({'FullScore': newFullScore.toString()});
+
+      // Mark gift as used
+      await FirebaseFirestore.instance.collection('gifts').doc(giftCard).update(
+          {'isUsed': true});
+
+      return 'Gift claimed successfully';
+    } catch (error) {
+      // Log the error for debugging purposes
+      print('Error claiming gift: $error');
+      return 'Error claiming gift. Please try again later.';
+    }
+  }
+}
 
 class AllGiftsScreen extends StatefulWidget {
   const AllGiftsScreen({Key? key}) : super(key: key);
@@ -13,6 +65,16 @@ class AllGiftsScreen extends StatefulWidget {
 }
 
 class _AllGiftsScreenState extends State<AllGiftsScreen> {
+  late int _userFullScore; // Variable to store user's full score
+
+  @override
+  void initState() {
+    super.initState();
+    // Load user's full score when the screen initializes
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    _userFullScore = int.parse(userProvider.getUser.FullScore);
+  }
+
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
@@ -27,7 +89,7 @@ class _AllGiftsScreenState extends State<AllGiftsScreen> {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 18,
-            color: Color(0xFF273085),
+            color: Color(0xFF00B2FF),
           ),
         ),
         leading: GestureDetector(
@@ -36,7 +98,7 @@ class _AllGiftsScreenState extends State<AllGiftsScreen> {
           },
           child: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Color(0xFF273085),
+            color: Color(0xFF00B2FF),
             size: 30,
           ),
         ),
@@ -67,7 +129,7 @@ class _AllGiftsScreenState extends State<AllGiftsScreen> {
                       ),
                     ),
                     Text(
-                      '${userProvider.getUser.FullScore}',
+                      userProvider.getUser.FullScore, // Display user's full score
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 24,
@@ -98,19 +160,22 @@ class _AllGiftsScreenState extends State<AllGiftsScreen> {
                     List<GiftModel>? giftList = snapshot.data;
                     if (giftList != null && giftList.isNotEmpty) {
                       return Column(
-                        children: giftList.map((gift) {
+                        children: giftList.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          GiftModel gift = entry.value;
+                          Color color = index.isEven ? Colors.orange : Colors.blue; // Alternating colors
+
                           return Column(
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  _showDialog('${gift.code}', int.parse(userProvider.getUser.FullScore));
-
+                                  _showDialog('${gift.code}', userProvider.getUser.uid);
                                 },
                                 child: Container(
                                   width: 307.17,
                                   height: 54,
                                   decoration: BoxDecoration(
-                                    color: Color(0xff273085),
+                                    color: color, // Use dynamically calculated color
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   child: Center(
@@ -149,8 +214,33 @@ class _AllGiftsScreenState extends State<AllGiftsScreen> {
     );
   }
 
-  void _showDialog(String giftCode, int userFullScore) async {
-    String claimResult = await GiftManager().claimGift(giftCode, userFullScore);
+  void _showDialog(String giftCode, String userId) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    if (userProvider.getUser == null || userProvider.getUser.FullScore == null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text("User data not available."),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("Close"),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    int userFullScore = int.parse(userProvider.getUser.FullScore!);
+    String claimResult = await GiftManager().claimGift(
+        giftCode, userFullScore.toString(), userId);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -168,44 +258,5 @@ class _AllGiftsScreenState extends State<AllGiftsScreen> {
         );
       },
     );
-  }
-}
-
-class GiftManager {
-  Future<List<GiftModel>> getAllGifts() {
-    return FireStoreMethods().getAllGifts();
-  }
-
-  Future<String> claimGift(String giftCard, int userFullScore) async {
-    try {
-      DocumentSnapshot giftSnapshot = await FirebaseFirestore.instance.collection('gifts').doc(giftCard).get(); // Fetch gift by code
-      if (!giftSnapshot.exists) {
-        return 'Gift not found';
-      }
-
-      Map<String, dynamic> giftData = giftSnapshot.data() as Map<String, dynamic>; // Provide type information
-
-      bool isUsed = giftData['isUsed'] ?? false; // Access 'isUsed' field
-      if (isUsed) {
-        return 'Gift is already used';
-      }
-
-      int pointsRequired = giftData['points'] ?? 0; // Access 'points' field
-
-      if (userFullScore < pointsRequired) {
-        return 'Insufficient points to claim the gift';
-      }
-
-      int newFullScore = userFullScore - pointsRequired;
-
-      // Replace 'USER_ID' with actual user ID
-      await FirebaseFirestore.instance.collection('users').doc('USER_ID').update({'FullScore': newFullScore}); // Update user's full score
-
-      await FirebaseFirestore.instance.collection('gifts').doc(giftCard).update({'isUsed': true}); // Mark gift as used
-
-      return 'Gift claimed successfully';
-    } catch (error) {
-      return 'Error claiming gift: $error';
-    }
   }
 }

@@ -33,7 +33,7 @@ class QuestionCard extends StatelessWidget {
                 Text(
                   questionModel.question,
                    style: TextStyle(
-                color: Color(0xFF273085),
+                color: Color(0xFF000000),
                fontSize: 30,
                 fontWeight: FontWeight.bold,
                ),

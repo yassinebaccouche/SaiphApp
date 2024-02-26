@@ -219,34 +219,7 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<List<GiftModel>> getAllGifts() async {
-    List<GiftModel> gifts = [];
 
-    try {
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('gifts')
-          .where('isUsed', isEqualTo: false)
-          .get();
-
-      gifts = querySnapshot.docs.map((doc) => GiftModel.fromSnap(doc)).toList();
-    } catch (err) {
-      print("Error fetching gifts: $err");
-      // You might want to handle errors here, such as logging or returning an empty list.
-    }
-
-    return gifts;
-  }
-
-  Future<String> markGiftAsUsed(String giftCard) async {
-    try {
-      await _firestore.collection('gifts').doc(giftCard).update({
-        'isUsed': true,
-      });
-      return 'success';
-    } catch (err) {
-      return err.toString();
-    }
-  }
 
   Future<int> getNotificationCount() async {
     try {
@@ -323,47 +296,34 @@ class FireStoreMethods {
     }
     return res;
   }
-  Future<String> claimGift(String giftCard, int userFullScore) async {
+  Future<List<GiftModel>> getAllGifts() async {
+    List<GiftModel> gifts = [];
+
     try {
-      // Retrieve the gift details
-      DocumentSnapshot giftSnapshot = await _firestore.collection('gifts').doc(giftCard).get();
-      if (!giftSnapshot.exists) {
-        return 'Gift not found';
-      }
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('gifts')
+          .where('isUsed', isEqualTo: false)
+          .get();
 
-      // Check if the gift is already used
-      bool isUsed = (giftSnapshot.data() as Map<String, dynamic>)['isUsed'] ?? false;
-      if (isUsed) {
-        return 'Gift is already used';
-      }
+      gifts = querySnapshot.docs.map((doc) => GiftModel.fromSnap(doc)).toList();
+    } catch (err) {
+      print("Error fetching gifts: $err");
+      // You might want to handle errors here, such as logging or returning an empty list.
+    }
 
-      // Retrieve the points required for the gift
-      int pointsRequired = (giftSnapshot.data() as Map<String, dynamic>)['points'] ?? 0;
+    return gifts;
+  }
 
-      // Check if the user has enough points to claim the gift
-      if (userFullScore < pointsRequired) {
-        return 'Insufficient points to claim the gift';
-      }
-
-      // Deduct points from the user's full score
-      int newFullScore = userFullScore - pointsRequired;
-
-      // Update the user's full score in Firestore
-      await _firestore.collection('users').doc('USER_ID').update({
-        'FullScore': newFullScore,
-      });
-
-      // Mark the gift as used
+  Future<String> markGiftAsUsed(String giftCard) async {
+    try {
       await _firestore.collection('gifts').doc(giftCard).update({
         'isUsed': true,
       });
-
-      return 'Gift claimed successfully';
-    } catch (error) {
-      return 'Error claiming gift: $error';
+      return 'success';
+    } catch (err) {
+      return err.toString();
     }
   }
-
 
 
 

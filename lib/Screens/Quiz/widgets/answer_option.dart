@@ -29,7 +29,7 @@ class AnswerOption extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 border:
-                Border.all(width: controller.getColor(index)==Color(0xFF273085)?1:3, color: controller.getColor(index))),
+                Border.all(width: controller.getColor(index)==Color(0xFFE49727)?1:3, color: controller.getColor(index))),
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
@@ -38,11 +38,11 @@ class AnswerOption extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                         text: '${index + 1}. ',
-                        style: TextStyle( color: Color(0xFF273085),),
+                        style: TextStyle( color: Color(0xFFE49727),),
                         children: [
                           TextSpan(
                             text: text,
-                            style: TextStyle(color: Color(0xFF273085),),
+                            style: TextStyle(color: Color(0xFFF4D5AF),),
                           ),
                         ]),
                   ),

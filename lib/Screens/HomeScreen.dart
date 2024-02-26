@@ -46,8 +46,12 @@ class _HomePageState extends State<HomePage> {
                   viewportFraction: 0.6,
                   enlargeCenterPage: false,
                   scrollDirection: Axis.horizontal,
+
+
                 ),
+
                 items: [
+
                   cardItem(CustomColors.lightBlue3, 'assets/images/talaani_no_bg.png',
                         () {
                       Navigator.push(
