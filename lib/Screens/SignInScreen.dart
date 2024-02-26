@@ -132,110 +132,112 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(40.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Email Input Field
-                          TextFormField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              hintText: 'Utilisateur',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter the Identifiant';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 16),
-                          // Password Input Field
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: _isPasswordObscured,
-                            decoration: InputDecoration(
-                              hintText: 'Mot de passe',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordObscured
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordObscured = !_isPasswordObscured;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter the Mot de passe';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 14),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: GestureDetector(
-                              onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ForgetPasswordPage(),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Email Input Field
+                            TextFormField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                hintText: 'Utilisateur',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
                                 ),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 120.0),
-                                child: Text(
-                                  'Mot de passe oublié ?',
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontFamily: 'Inter',
-                                    color: Colors.grey,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 24),
-                          // Sign In Button
-                          Container(
-                            width: 120 * fem,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                loginUser();
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the Identifiant';
+                                }
+                                return null;
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF00B2FF),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50 * fem),
+                            ),
+                            SizedBox(height: 16),
+                            // Password Input Field
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _isPasswordObscured,
+                              decoration: InputDecoration(
+                                hintText: 'Mot de passe',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
                                 ),
-                                elevation: 2 * fem,
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordObscured
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordObscured = !_isPasswordObscured;
+                                    });
+                                  },
+                                ),
                               ),
-                              child: !_isLoading
-                                  ? const Text(
-                                'Connecter',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontFamily: 'Inter',
-                                  color: Colors.white,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter the Mot de passe';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 14),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: GestureDetector(
+                                onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ForgetPasswordPage(),
+                                  ),
                                 ),
-                              )
-                                  : CircularProgressIndicator(
-                                color: Colors.blue,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 120.0),
+                                  child: Text(
+                                    'Mot de passe oublié ?',
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      fontFamily: 'Inter',
+                                      color: Colors.grey,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 24),
+                            // Sign In Button
+                            Container(
+                              width: 120 * fem,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  loginUser();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xFF00B2FF),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50 * fem),
+                                  ),
+                                  elevation: 2 * fem,
+                                ),
+                                child: !_isLoading
+                                    ? const Text(
+                                  'Connecter',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontFamily: 'Inter',
+                                    color: Colors.white,
+                                  ),
+                                )
+                                    : CircularProgressIndicator(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
