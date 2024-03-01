@@ -14,6 +14,7 @@ class TransfertPointScreen extends StatefulWidget {
 class _TransfertPointScreenState extends State<TransfertPointScreen> {
   final TextEditingController searchController = TextEditingController();
   bool isShowUsers = false;
+  bool isTransferEnabled = true;
 
   @override
   void initState() {
@@ -22,6 +23,11 @@ class _TransfertPointScreenState extends State<TransfertPointScreen> {
     getLastDonationTimestamp().then((lastTimestamp) {
       setState(() {
         lastDonationTimestamp = lastTimestamp;
+        if (lastDonationTimestamp != null &&
+            DateTime.now().difference(lastDonationTimestamp!) <
+                Duration(minutes: 1)) {
+          isTransferEnabled = false;
+        }
       });
     });
   }
@@ -46,7 +52,9 @@ class _TransfertPointScreenState extends State<TransfertPointScreen> {
   Future<DateTime?> getLastDonationTimestamp() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final timestamp = prefs.getInt('lastDonationTimestamp');
-    return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
+    return timestamp != null
+        ? DateTime.fromMillisecondsSinceEpoch(timestamp)
+        : null;
   }
 
   // Save the last donation timestamp to SharedPreferences
@@ -59,7 +67,8 @@ class _TransfertPointScreenState extends State<TransfertPointScreen> {
   void transferPoints(User recipient) async {
     // Check if last donation timestamp exists and if it's within the last 24 hours
     if (lastDonationTimestamp != null &&
-        DateTime.now().difference(lastDonationTimestamp!) < Duration(hours: 24)) {
+        DateTime.now().difference(lastDonationTimestamp!) <
+            Duration(minutes: 1)) {
       // Don't allow donation if within 24 hours
       print('You can only donate once every 24 hours.');
       // Optionally, you can show a message to the user indicating the restriction
@@ -82,6 +91,7 @@ class _TransfertPointScreenState extends State<TransfertPointScreen> {
       await saveLastDonationTimestamp(DateTime.now());
       setState(() {
         lastDonationTimestamp = DateTime.now();
+        isTransferEnabled = false;
       });
       // Optionally, you can show a message to the user indicating successful transfer
     }).catchError((error) {
@@ -197,12 +207,14 @@ class _TransfertPointScreenState extends State<TransfertPointScreen> {
                           ],
                         ),
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: isTransferEnabled
+                              ? () {
                             // Handle the transfer action here
                             // Pass the recipient user object to the transferPoints function
                             transferPoints(User.fromSnap(
                                 snapshot.data!.docs[index]));
-                          },
+                          }
+                              : null,
                           child: Text('Transfer 50 points'),
                         ),
                       ],
@@ -275,19 +287,21 @@ class _TransfertPointScreenState extends State<TransfertPointScreen> {
                               pseudo,
                               style: TextStyle(
                                 color: Color(0xFF00B2FF),
-                                fontSize: 20,
+                                fontSize: 10,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: isTransferEnabled
+                              ? () {
                             // Handle the transfer action here
                             // Pass the recipient user object to the transferPoints function
                             transferPoints(User.fromSnap(
                                 snapshot.data!.docs[index]));
-                          },
+                          }
+                              : null,
                           child: Text('Transfer 50 points'),
                         ),
                       ],
@@ -299,6 +313,23 @@ class _TransfertPointScreenState extends State<TransfertPointScreen> {
           }
         },
       ),
+      bottomSheet: lastDonationTimestamp != null &&
+          DateTime.now().difference(lastDonationTimestamp!) <
+              Duration(minutes:1 )
+          ? Container(
+        color: Colors.grey[200],
+        padding: EdgeInsets.all(16.0),
+        child: Text(
+          'You can only transfer points to one user every 24 hours.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+      )
+          : null,
     );
   }
 }
