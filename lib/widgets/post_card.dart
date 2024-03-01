@@ -50,7 +50,7 @@ class _PostCardState extends State<PostCard> {
   }
   deletePost(String postId) async {
     try {
-      await FireStoreMethods().deletePost(postId);
+      await FireStoreMethodes().deletePost(postId);
     } catch (err) {
       showSnackBar(
         context,
@@ -111,7 +111,7 @@ class _PostCardState extends State<PostCard> {
 
           GestureDetector(
             onDoubleTap: () async {
-              await FireStoreMethods().likePost(
+              await FireStoreMethodes().likePost(
                 widget.snap['postId'].toString(),
                 user.uid,
 
@@ -169,7 +169,7 @@ class _PostCardState extends State<PostCard> {
                       : const Icon(
                     Icons.favorite_border,
                   ),
-                  onPressed: () => FireStoreMethods().likePost(
+                  onPressed: () => FireStoreMethodes().likePost(
                     widget.snap['postId'].toString(),
                     user.uid,
                     widget.snap['likes'],

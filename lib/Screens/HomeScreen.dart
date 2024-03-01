@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:saiphappfinal/Screens/Games/Tala3ni/tala3ni_main_menu.dart';
 import 'package:saiphappfinal/Screens/Quiz/Quiz_screen.dart';
-import 'package:saiphappfinal/Screens/QuizCultureGeneral/Quiz_screen.dart';
 
 import 'package:saiphappfinal/utils/custom_colors.dart';
 import 'package:saiphappfinal/widgets/game_widgets/container_wooden.dart';
@@ -236,20 +235,22 @@ class _HomePageState extends State<HomePage> {
 
   Widget cardItem(Color color, String image, VoidCallback onPressed, double width, double paddingV, double paddingH){
     return InkWell(
-      onTap: () {
-        onPressed();
-      },
-      child: Container(
-        width: width,
-        padding: EdgeInsets.symmetric(vertical: paddingV,horizontal: paddingH),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: color
+      onTap: onPressed,
+      child: Padding( // Add Padding widget here
+        padding: const EdgeInsets.symmetric(horizontal: 8.0), // Adjust horizontal padding as needed
+        child: Container(
+          width: width,
+          padding: EdgeInsets.symmetric(vertical: paddingV,horizontal: paddingH),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: color
+          ),
+          child: Image.asset(image,fit: BoxFit.contain),
         ),
-        child: Image.asset(image,fit: BoxFit.contain),
       ),
     );
   }
+
 
   Widget buildCarouselItem(String imagePath, String title,VoidCallback onPressed, double overlayOpacity) {
     return InkWell(

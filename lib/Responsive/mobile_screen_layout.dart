@@ -49,9 +49,9 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
     final items = <Widget>[
       Icon(Icons.videogame_asset, size: 30, color: (_page == 0) ? Colors.white : Colors.white),
-      Icon(Icons.quiz, size: 30, color: (_page == 1) ? Colors.white : Colors.white),
+      Icon(Icons.add_box_rounded, size: 30, color: (_page == 1) ? Colors.white : Colors.white),
       Icon(Icons.shopping_bag, size: 30, color: (_page == 2) ? Colors.white : Colors.white),
-      Icon(Icons.photo_outlined, size: 30, color: (_page == 3) ? Colors.white : Colors.white),
+      Icon(Icons.account_circle, size: 30, color: (_page == 3) ? Colors.white : Colors.white),
     ];
 
     return Scaffold(

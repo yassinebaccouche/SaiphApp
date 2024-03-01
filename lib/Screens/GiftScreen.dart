@@ -4,11 +4,16 @@ import 'package:saiphappfinal/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:saiphappfinal/Screens/TransfertPoints.dart';
 import 'package:saiphappfinal/Screens/AllGIftsScreen.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GiftScreen extends StatelessWidget {
   const GiftScreen({Key? key}) : super(key: key);
+
+  // Function to handle the refresh operation
+  void _refresh(BuildContext context) {
+    final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.refreshUserData(); // Assuming you have a method to refresh user data
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +87,7 @@ class GiftScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => AllGiftsScreen(),
                   ),
-                );
+                ).then((_) => _refresh(context)); // Refresh after navigating back
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(
@@ -111,8 +116,7 @@ class GiftScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => TransfertPointScreen(),
                   ),
-                );
-
+                ).then((_) => _refresh(context)); // Refresh after navigating back
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(

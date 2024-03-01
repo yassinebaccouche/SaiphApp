@@ -18,7 +18,7 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   Future<void> fetchNotifications() async {
-    FireStoreMethods firestoreMethods = FireStoreMethods();
+    FireStoreMethodes firestoreMethods = FireStoreMethodes();
     List<NotificationModel> fetchedNotifications =
     await firestoreMethods.fetchAllNotifications();
 

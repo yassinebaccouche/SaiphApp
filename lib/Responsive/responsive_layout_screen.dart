@@ -26,10 +26,15 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
     addData();
   }
 
-  addData() async {
-    UserProvider userProvider =
-    Provider.of<UserProvider>(context, listen: false);
-    await userProvider.refreshUser();
+  Future<void> addData() async {
+    try {
+      UserProvider userProvider =
+      Provider.of<UserProvider>(context, listen: false);
+      await userProvider.refreshUserData(); // Corrected method name
+    } catch (error) {
+      // Handle any errors that might occur during data refresh
+      print('Error adding data: $error');
+    }
   }
 
   @override

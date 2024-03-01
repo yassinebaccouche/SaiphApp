@@ -10,6 +10,7 @@ class PuzzleGameService {
     var snapshot = await _usersCollection.doc(userId).get();
     final userData = snapshot.data() as Map<String, dynamic>;
     return  userData['PuzzleScore'] ?? "0";
+
   }
 
   /*Stream<String> getPuzzleScore(String userId){
@@ -22,8 +23,11 @@ class PuzzleGameService {
   Future<void> setNewScore(int newScore,String userId) async {
      await _usersCollection.doc(userId).update({
       'PuzzleScore':newScore.toString(),
+
     });
   }
+
+
 
 }
 

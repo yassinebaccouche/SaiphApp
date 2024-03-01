@@ -19,8 +19,8 @@ class GiftModel {
     return GiftModel(
       code: snapshot["code"],
       card: snapshot["card"],
-      points: snapshot["points"],
-      isUsed: snapshot["isUsed"],
+      points: snapshot["points"] ?? '0', // Handle null by providing a default value
+      isUsed: snapshot["isUsed"] ?? false,
     );
   }
 

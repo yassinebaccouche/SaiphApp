@@ -25,7 +25,7 @@ class _DisplayNotificationPageState extends State<DisplayNotificationPage> {
   void NotifRESPONSE(String uid, String name, String profilePic) async {
     try {
       if (selectedAnswerController.text.isNotEmpty) {
-        String res = await FireStoreMethods().NotifReponse(
+        String res = await FireStoreMethodes().NotifReponse(
           widget.notification.NotifId,
           selectedAnswerController.text,
           uid,

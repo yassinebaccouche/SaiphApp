@@ -206,7 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       MediaQuery.of(context).size.width / 2,
                                       "Unfollow",
                                       SizedBox(), () async {
-                                      await FireStoreMethods().followUser(
+                                      await FireStoreMethodes().followUser(
                                         FirebaseAuth.instance.currentUser!.uid,
                                         userData['uid'],
                                       );
@@ -221,7 +221,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       MediaQuery.of(context).size.width / 2,
                                       "Follow",
                                       SizedBox(), () async {
-                                      await FireStoreMethods().followUser(
+                                      await FireStoreMethodes().followUser(
                                         FirebaseAuth.instance.currentUser!.uid,
                                         userData['uid'],
                                       );

@@ -65,7 +65,7 @@ class _FeedScreenState extends State<FeedScreen> {
     // start the loading
     try {
       // upload to storage and db
-      String res = await FireStoreMethods().uploadPost(
+      String res = await FireStoreMethodes().uploadPost(
         _descriptionController.text,
         _file!,
         uid,

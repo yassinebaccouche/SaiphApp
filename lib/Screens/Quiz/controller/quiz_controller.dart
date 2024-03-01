@@ -75,72 +75,7 @@ class QuizController extends GetxController{
       answer: 1,
       options: [' VRAI', ' FAUX'],
     ),
-    QuestionModel(
-      id: 11,
-      question: "La boite OXIMAL® injectable dosé à 15 mg contient 6 ampoules",
-      answer: 1,
-      options: [' VRAI', ' FAUX'],
-    ),
-    QuestionModel(
-      id: 12,
-      question: "ULDINE®, la Famotidine de SAIPH,  peut être conseillé dans le traitement des symptômes du Reflux Gastro-Œsophagien:",
-      answer: 1,
-      options: [' VRAI', ' FAUX'],
-    ),
-    QuestionModel(
-      id: 13,
-      question: "SAIPH est le seul laboratoire en Tunisie qui possède 3 molécules d’IPP:",
-      answer: 1,
-      options: [' VRAI', ' FAUX'],
-    ),
-    QuestionModel(
-      id: 14,
-      question: "Le seul laboratoire en Tunisie qui possède Deux gammes complète de TADALAFIL & de SILDENAFIL:",
-      answer: 1,
-      options: [' SAIPH', ' TERIAK', ' ADWYA'],
-    ),
-    QuestionModel(
-      id: 15,
-      question: "Quelle est la forme des cellules sanguines ? ",
-      answer: 1,
-      options: [' Cercle', ' Anneau', ' Rectangle'],
-    ),
-    QuestionModel(
-      id: 16,
-      question: "Quels types de cellules trouve-t-on dans le cerveau ? ",
-      answer: 1,
-      options: [' Globules rouges', ' Cellules épithéliales', ' Cellules nerveuses'],
-    ),
-    QuestionModel(
-      id: 17,
-      question: "Quels sont les plus gros organes du corps humain ? ",
-      answer: 1,
-      options: ['Foie', ' Peau', 'Rate'],
-    ),
-    QuestionModel(
-      id: 18,
-      question: "Quel est le plus gros os du corps humain ? ",
-      answer: 1,
-      options: [' Fémur', ' Os pelvien', ' Os du crâne'],
-    ),
-    QuestionModel(
-      id: 19,
-      question: "Combien d’os y a -t- il dans le crâne humain ? ",
-      answer: 1,
-      options: [' 22', ' 33', ' 44'],
-    ),
-    QuestionModel(
-      id: 20,
-      question: "Combien de papilles gustatives y a -t- il dans la langue humaine ? ",
-      answer: 1,
-      options: [' 10 000', ' 20 000', ' 30 000'],
-    ),
-    QuestionModel(
-      id: 21,
-      question: "Quel est le premier symptôme à rechercher chez un patient qui tousse ? ",
-      answer: 1,
-      options: [' Douleur thoracique', ' Fièvre', ' Écoulement nasal'],
-    ),
+
 
 
   ];
@@ -207,8 +142,8 @@ class QuizController extends GetxController{
   }
 
   //get final score
-  double get scoreResult {
-    return _countOfCorrectAnswers * 100 / _questionsList.length;
+  int get scoreResult {
+    return _countOfCorrectAnswers ;
   }
 
   void checkAnswer(QuestionModel questionModel, int selectAnswer) {

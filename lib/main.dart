@@ -3,17 +3,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:saiphappfinal/Screens/Splash.dart';
+import 'package:provider/provider.dart';
+
+import 'package:saiphappfinal/Screens/SignInScreen.dart';
 import 'package:saiphappfinal/Screens/user_formulaire_one.dart';
 import 'package:saiphappfinal/providers/user_provider.dart';
 import 'package:saiphappfinal/utils/games_utils/inject_dependencies.dart';
-import 'package:provider/provider.dart';
-import'package:saiphappfinal/Screens/Games/flappybird/main.dart';
-import 'package:saiphappfinal/Screens/SignInScreen.dart';
-import 'Responsive/mobile_screen_layout.dart';
-import 'Responsive/responsive_layout_screen.dart';
-import 'Responsive/web_screen_layout.dart';
+import 'package:saiphappfinal/Screens/Splash.dart';
 
+import 'package:saiphappfinal/Responsive/mobile_screen_layout.dart';
+import 'package:saiphappfinal/Responsive/responsive_layout_screen.dart';
+import 'package:saiphappfinal/Responsive/web_screen_layout.dart';
+import 'package:saiphappfinal/Models/user.dart' as CustomAppUser; // Renamed import
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
@@ -25,12 +27,13 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: "AIzaSyCzA6qTchzKCjIvJippBtqb3sj1LL6UNo4",
-        authDomain: "adol-2789a.firebaseapp.com",
-        projectId: "adol-2789a",
-        storageBucket: "adol-2789a.appspot.com",
-        messagingSenderId: "345522697739",
-        appId: "1:345522697739:web:ab291843dd7c46520d790e",
+          apiKey: "AIzaSyDd73LUWiKhfIm9hoS7OtqqfrsIdpGf3-I",
+          authDomain: "mysaiph-26b1c.firebaseapp.com",
+          projectId: "mysaiph-26b1c",
+          storageBucket: "mysaiph-26b1c.appspot.com",
+          messagingSenderId: "154959907692",
+          appId: "1:154959907692:web:519c2023e47834f7518149",
+          measurementId: "G-1Z9EGRPDCD"
       ),
     );
   } else {
@@ -42,7 +45,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}); // Fix the constructor syntax
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,26 +63,35 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
-              // Checking if the snapshot has any data or not
               if (snapshot.hasData) {
-                // User is already signed in, navigate to the main screen
-                return ResponsiveLayout(
-                  mobileScreenLayout: MobileScreenLayout(),
-                  webScreenLayout: WebScreenLayout(),
-                );
-              } else {
-                // User is not signed in, show the splash screen
-                return SignInScreen();
+                User? user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  // Retrieve user data from Firestore based on user's UID
+                  return FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance.collection('users').doc(user.uid).get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          // Create a CustomAppUser.User object from Firestore data
+                          CustomAppUser.User? userData = CustomAppUser.User.fromSnap(snapshot.data!);
+                          if (userData != null && userData.Verified == '1') {
+                            return ResponsiveLayout(
+                              mobileScreenLayout: MobileScreenLayout(),
+                              webScreenLayout: WebScreenLayout(),
+                            );
+                          } else {
+                            return SignInScreen();
+                          }
+                        }
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
+                }
               }
             }
-
-            // Connection to future hasn't been made yet
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
             return SplashScreen();
           },
         ),

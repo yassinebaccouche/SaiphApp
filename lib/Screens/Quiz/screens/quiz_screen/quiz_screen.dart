@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:saiphappfinal/Screens/Quiz/controller/quiz_controller.dart';
-import 'package:saiphappfinal/Screens/Quiz/widgets/custom_button.dart';
+
 import 'package:saiphappfinal/Screens/Quiz/widgets/progress_timer.dart';
 import 'package:saiphappfinal/Screens/Quiz/widgets/question_card.dart';
 
@@ -12,12 +12,15 @@ class QuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final pageViewHeight = (2 / 3) * screenHeight;
+
     return Scaffold(
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
           Image.asset(
-            'assets/images/QuizBack.png', // Replace with your image path
+            'assets/QuizBackground.png', // Replace with your image path
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             fit: BoxFit.cover,
@@ -32,29 +35,9 @@ class QuizScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          RichText(
-                            text: TextSpan(
-                              text: 'Question ',
-                              style: Theme.of(context).textTheme.headline4!.copyWith(color: Color(
-                                  0xFF2E3032)),
-                              children: [
-                                TextSpan(
-                                  text: controller.numberOfQuestion.round().toString(),
-                                  style: Theme.of(context).textTheme.headline4!.copyWith(color: Color(0xFF273085)),
-                                ),
-                                TextSpan(
-                                  text: '/',
-                                  style: Theme.of(context).textTheme.headline5!.copyWith(color: Color(0xFF273085)),
-                                ),
-                                TextSpan(
-                                  text: controller.countOfQuestion.toString(),
-                                  style: Theme.of(context).textTheme.headline5!.copyWith(color: Color(0xFF273085)),
-                                ),
-                              ],
-                            ),
-                          ),
+
                           GestureDetector(
                             onTap: () {
                               Navigator.pop(context);
@@ -70,14 +53,76 @@ class QuizScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
                     SizedBox(
-                      height: 450,
+                      height: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage: AssetImage('assets/images/avatar.png'), // Replace with user's avatar image
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Username', // Replace with user's name
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Score:1200', // Replace with user's title
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Question ',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20, // Adjust font size here
+                          fontWeight: FontWeight.bold, // Adjust font weight here
+                        ),
+                        children: [
+                          TextSpan(
+                            text: controller.numberOfQuestion.round().toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20, // Adjust font size here
+                              fontWeight: FontWeight.bold, // Adjust font weight here
+                            ),
+                          ),
+                          TextSpan(
+                            text: '/',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18, // Adjust font size here
+                              fontWeight: FontWeight.normal, // Adjust font weight here
+                            ),
+                          ),
+                          TextSpan(
+                            text: controller.countOfQuestion.toString(),
+                            style: TextStyle(
+                              color: Colors.grey[300], // Adjust color here
+                              fontSize: 18, // Adjust font size here
+                              fontWeight: FontWeight.normal, // Adjust font weight here
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: pageViewHeight,
                       child: PageView.builder(
                         scrollDirection: Axis.horizontal,
-                        physics: const NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) => QuestionCard(
                           questionModel: controller.questionsList[index],
                         ),

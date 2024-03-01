@@ -108,7 +108,7 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
               color: Colors.white,
             ),
           ),
-          backgroundColor: const Color(0xFF00B2FF).withOpacity(0.5),
+          backgroundColor: const Color(0xff1331C4).withOpacity(0.5),
           elevation: 0.0,
         ),
         body: SingleChildScrollView(
@@ -159,7 +159,7 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                       child: Text(
                         "Informations pharmacie",
                         style: TextStyle(
-                          color: const Color(0xFF00B2FF),
+                          color: const Color(0xff1331C4),
                           fontSize: 25,
                           fontWeight: FontWeight.w600,
                         ),
@@ -223,7 +223,7 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(25),
                               border: Border.all(
-                                color: const Color(0xFF00B2FF),
+                                color: const Color(0xff273085),
                                 width: 1,
                               ),
                             ),
@@ -240,7 +240,7 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                                       angle: 90 * pi / 180,
                                       child: Icon(
                                         Icons.arrow_forward_ios_rounded,
-                                        color: Color(0xFF00B2FF),
+                                        color: Color(0xff273085),
                                       ),
                                     ),
                                   ),
@@ -259,7 +259,7 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                 color:
-                                                const Color(0xFF00B2FF),
+                                                const Color(0xff273085),
                                                 fontWeight: FontWeight.w400,
                                               ),
                                             ),
@@ -287,7 +287,7 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                     ),
                     RoundedButton(
                       text: "Enregistrer",
-                      backgroundColor: const Color(0xFF00B2FF).withOpacity(0.5),
+                      backgroundColor: const Color(0xff1331C4).withOpacity(0.5),
                       strokeColor: Colors.transparent,
                       txtColor: Colors.white,
                       onPressed: () async {

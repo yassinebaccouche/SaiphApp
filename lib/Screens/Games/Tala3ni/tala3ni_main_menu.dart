@@ -9,7 +9,9 @@ import '../../../widgets/game_widgets/rounded_button.dart';
 import '../../../widgets/game_widgets/up_to_down.dart';
 import '../../../widgets/game_widgets/user_header.dart';
 import 'package:saiphappfinal/Screens/Games/flappybird/main.dart';
-
+import 'package:saiphappfinal/Responsive/mobile_screen_layout.dart';
+import 'package:saiphappfinal/Responsive/responsive_layout_screen.dart';
+import 'package:saiphappfinal/Responsive/web_screen_layout.dart';
 class Tala3niMainMenu extends StatefulWidget {
   final Widget backgroundImage;
   final Color buttonPlayColor;
@@ -110,7 +112,14 @@ class _Tala3niMainMenuState extends State<Tala3niMainMenu> {
                             flex: 1,
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.pop(context);
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => ResponsiveLayout(
+                                        mobileScreenLayout: MobileScreenLayout(),
+                                        webScreenLayout: WebScreenLayout(),
+                                      ),
+                                    ),
+                                );
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -192,7 +201,7 @@ class _Tala3niMainMenuState extends State<Tala3niMainMenu> {
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
                     // HOW GAME CALCULATES SCORE
-                    "some text here some text here some text here some text here",
+                    "Dans Tala3ni, le joueur contrôle un oiseau en tapotant sur l'écran pour éviter les tuyaux verts. Chaque passage entre les tuyaux rapporte un point, mais la partie se termine si l'oiseau touche un tuyau ou le sol. Le défi réside dans la coordination des tapotements pour maintenir l'oiseau en vol et battre son propre record.",
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
@@ -207,7 +216,14 @@ class _Tala3niMainMenuState extends State<Tala3niMainMenu> {
           backgroundColor: widget.buttonOptionsColor,
           txtColor: Colors.white,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => ResponsiveLayout(
+                    mobileScreenLayout: MobileScreenLayout(),
+                    webScreenLayout: WebScreenLayout(),
+                  ),
+                ),
+            );
           },
         ),
       ],

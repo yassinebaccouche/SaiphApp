@@ -15,56 +15,40 @@ class QuestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-          height: 450,
-          margin: const EdgeInsets.symmetric(horizontal: 20.0),
-          decoration: BoxDecoration(
-            color: Colors.white54,
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  questionModel.question,
-                   style: TextStyle(
-                color: Color(0xFF000000),
-               fontSize: 30,
-                fontWeight: FontWeight.bold,
-               ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              questionModel.question,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
 
-
-      ),
-                //const SizedBox(height: 15),
-                const Spacer(
-                  flex: 1,
-                ),
-                ...List.generate(
-                    questionModel.options.length,
-                        (index) => Column(
-                      children: [
-                        AnswerOption(
-                            questionId: questionModel.id,
-                            text: questionModel.options[index],
-                            index: index,
-                            onPressed: () => Get.find<QuizController>()
-                                .checkAnswer(questionModel, index)),
-                        const SizedBox(
-                          height: 15,
-                        )
-                      ],
-                    )),
-                const Spacer(
-                  flex: 1,
-                ),
-              ],
+              ),
             ),
-          )),
+            SizedBox(height: 20),
+            ...List.generate(
+              questionModel.options.length,
+                  (index) => Column(
+                children: [
+                  AnswerOption(
+                    questionId: questionModel.id,
+                    text: questionModel.options[index],
+                    index: index,
+                    onPressed: () => Get.find<QuizController>()
+                        .checkAnswer(questionModel, index),
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

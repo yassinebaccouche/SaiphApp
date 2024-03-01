@@ -86,7 +86,7 @@ class ResultScreen extends StatelessWidget {
                       height: 30,
                     ),
                     Text(
-                      '${controller.scoreResult} /20',
+                      '${controller.scoreResult} /10',
                       style: Theme.of(context).textTheme.headline3!.copyWith(
                         color: Color(0xFF273085),
                       ),

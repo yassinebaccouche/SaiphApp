@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'package:saiphappfinal/Models/post.dart';
 import 'package:saiphappfinal/Models/Notif.dart';
 
-class FireStoreMethods {
+class FireStoreMethodes {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<String> uploadPost(String description, Uint8List file, String uid,
@@ -305,7 +305,10 @@ class FireStoreMethods {
           .where('isUsed', isEqualTo: false)
           .get();
 
+      print('Number of documents: ${querySnapshot.docs.length}');
+
       gifts = querySnapshot.docs.map((doc) => GiftModel.fromSnap(doc)).toList();
+      print('Gifts: $gifts');
     } catch (err) {
       print("Error fetching gifts: $err");
       // You might want to handle errors here, such as logging or returning an empty list.
@@ -313,6 +316,7 @@ class FireStoreMethods {
 
     return gifts;
   }
+
 
   Future<String> markGiftAsUsed(String giftCard) async {
     try {

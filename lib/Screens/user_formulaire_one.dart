@@ -113,7 +113,7 @@ class _UserFormulaireOneState extends State<UserFormulaireOne> {
               color: Colors.white,
             ),
           ),
-          backgroundColor: const Color(0xFF00B2FF).withOpacity(0.5),
+          backgroundColor: const Color(0xff1331C4).withOpacity(0.5),
           elevation: 0.0,
         ),
         body: SingleChildScrollView(
@@ -169,7 +169,7 @@ class _UserFormulaireOneState extends State<UserFormulaireOne> {
                     Text(
                       "Informations profil",
                       style: TextStyle(
-                          color: const Color(0xFF00B2FF),
+                          color: const Color(0xff1331C4),
                           fontSize: 25,
                           fontWeight: FontWeight.w600),
                     ),
@@ -247,7 +247,7 @@ class _UserFormulaireOneState extends State<UserFormulaireOne> {
                         child: FloatingActionButton(
                           elevation: 0,
                           backgroundColor:
-                          const Color(0xFF00B2FF).withOpacity(0.5),
+                          const Color(0xff1331C4).withOpacity(0.5),
                           child: Icon(
                             Icons.arrow_forward_ios_outlined,
                             color: Colors.white,

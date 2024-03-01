@@ -22,23 +22,23 @@ class GameTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-     GameController? controller;
-     GameState? state;
+    GameController? controller;
+    GameState? state;
     if(title.contains("PUZZLE")){
-       controller = context.watch<GameController>();
-       state = controller.state;
+      controller = context.watch<GameController>();
+      state = controller.state;
     }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-            "RAKABNI",
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              color: CustomColors.darkBlue,
-            ),
+        Text(
+          title.toLowerCase().trim().contains("puzzle") ? "RAKABNI": title,
+          style: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w800,
+            color: CustomColors.darkBlue,
+          ),
         ),
         const Spacer(),
         Row(
@@ -56,15 +56,15 @@ class GameTopBar extends StatelessWidget {
             if(onPressedClose != null)
               const SizedBox(width: 15,),
             if(onPressedClose != null)
-             GestureDetector(
-                 onTap: () {
-                   onPressedClose!();
-                 },
-                 child: SvgPicture.asset(
-                   "assets/images/close_icon.svg",
-                   width: 30,
-                 ),
-             ),
+              GestureDetector(
+                onTap: () {
+                  onPressedClose!();
+                },
+                child: SvgPicture.asset(
+                  "assets/images/close_icon.svg",
+                  width: 30,
+                ),
+              ),
           ],
         )
       ],

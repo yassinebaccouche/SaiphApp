@@ -18,20 +18,20 @@ class User {
   final String CodeClient;
 
   User({
-  required this.pseudo,
-  required this.uid,
-  required this.photoUrl,
-  required this.email,
-  required this.Profession,
-  required this.phoneNumber,
-  required this.pharmacy,
-  required this.Datedenaissance,
-  required this.followers,
-  required this.following,
-  required this.Verified,
-  required this.FullScore,
-  required this.PuzzleScore,
-  required this.CodeClient,
+    required this.pseudo,
+    required this.uid,
+    required this.photoUrl,
+    required this.email,
+    required this.Profession,
+    required this.phoneNumber,
+    required this.pharmacy,
+    required this.Datedenaissance,
+    required this.followers,
+    required this.following,
+    required this.Verified,
+    required this.FullScore,
+    required this.PuzzleScore,
+    required this.CodeClient,
   });
 
   static User fromSnap(DocumentSnapshot snap) {
