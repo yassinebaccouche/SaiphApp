@@ -20,54 +20,68 @@ class UserFormulaireTwo extends StatefulWidget {
   final Uint8List? file;
 
   UserFormulaireTwo({
-    Key? key, // Added key parameter
+    Key? key,
     required this.pseudo,
     required this.date,
     required this.tel,
     required this.mdp,
     this.file,
-  }) : super(key: key); // Fixed constructor
+  }) : super(key: key);
 
   @override
   State<UserFormulaireTwo> createState() => _UserFormulaireTwoState();
 }
 
 class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
-  TextEditingController pharmacieController = TextEditingController();
-  TextEditingController crmController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   bool _isLoading = false;
   List<String> professions = [
     'Profession',
-    'Pharmacist', // Changed 'Pharamcien' to 'Pharmacist'
-    'Doctor', // Changed 'Medecin' to 'Doctor'
+    'Pharmacist',
+    'Doctor',
     'Profession 3',
     // Add more professions as needed
   ];
+  List<String> pharmacies = [
+    'Pharmacy',
+    'MOHAMED BEN AMOR',
+    'MOUIN NASR ZAAFRANE',
+    'RIM DOGUI BOUKHRIS',
+    'SOULAIMA TURKI SOUISSI',
+    'OLFA CHENNAOUI',
+    // Add more pharmacies as needed
+  ];
+  Map<String, String> pharmacyToCRMMap = {
+    'Pharmacy':'CRM',
+    'MOHAMED BEN AMOR': 'XLKKNS',
+    'MOUIN NASR ZAAFRANE': 'cbozczn',
+    'RIM DOGUI BOUKHRIS': 'jvbjozbv',
+    'SOULAIMA TURKI SOUISSI':'vobsso'
+    // Add more mappings as needed
+  };
 
-  String selectedProfession = 'Profession'; // Default selected profession
+  String selectedProfession = 'Profession';
+  String selectedPharmacy = 'Pharmacy';
+  String selectedCRM = 'CRM';
 
   void updateUserInfo() async {
-    // set loading to true
     setState(() {
       _isLoading = true;
     });
 
-    // Call the AuthMethods updateUser function
     String result = await AuthMethodes().updateUser(
-      pseudo: widget.pseudo, // Fixed typo: pesudo to widget.pseudo
-      CodeClient: crmController.text,
-      phoneNumber: widget.tel, // Changed tel to widget.tel
-      pharmacy: pharmacieController.text,
-      Datedenaissance: widget.date, // Changed date to widget.date
+      pseudo: widget.pseudo,
+      CodeClient: selectedCRM,
+      phoneNumber: widget.tel,
+      pharmacy: selectedPharmacy,
+      Datedenaissance: widget.date,
       photoUrl: widget.file ?? Uint8List(0),
       Verified: '1',
       newEmail: emailController.text,
-      newPassword: widget.mdp, // Changed mdp to widget.mdp
+      newPassword: widget.mdp,
       Profession: selectedProfession,
     );
 
-    // Check the result and show appropriate messages or navigate to another screen
     if (result == "success") {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -77,14 +91,10 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
           ),
         ),
       );
-      // User data updated successfully
-      // You can navigate to another screen or show a success message
     } else {
-      // Some error occurred
-      // Display an error message to the user
+      // Handle error
     }
 
-    // set loading to false after the operation is complete
     setState(() {
       _isLoading = false;
     });
@@ -126,10 +136,10 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                     children: [
                       Stack(
                         children: [
-                          Image.asset(
-                            "assets/images/profile_pic.png",
-                            height: 200,
-                            width: 200,
+                          CircleAvatar(
+                            radius: 100,
+                            backgroundImage: MemoryImage(widget.file ?? Uint8List(0)),
+                            child: widget.file == null ? Icon(Icons.person, size: 100) : null,
                           ),
                         ],
                       ),
@@ -172,32 +182,128 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                           const SizedBox(
                             height: 10,
                           ),
-                          InputField(
-                            validatorFunction: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Veuillez entrer le Nom de la pharmacie';
-                              }
-                              return null;
-                            },
-                            textController: pharmacieController,
-                            keyboardType: TextInputType.name,
-                            label: "Nom de la pharmacie",
-                            prefixIcon: Icons.local_pharmacy_outlined,
+                          Container(
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(
+                                color: const Color(0xff273085),
+                                width: 1,
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: Center(
+                                child: DropdownButton<String>(
+                                  dropdownColor: Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                  icon: Padding(
+                                    padding: const EdgeInsets.only(
+                                      right: 10,
+                                    ),
+                                    child: Transform.rotate(
+                                      angle: 90 * pi / 180,
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xff273085),
+                                      ),
+                                    ),
+                                  ),
+                                  items: pharmacies
+                                      .map(
+                                        (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 5,
+                                        ).copyWith(left: 10),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "$e ",
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                color:
+                                                const Color(0xff273085),
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                      .toList(),
+                                  onChanged: (selection) {
+                                    setState(() {
+                                      selectedPharmacy = selection!;
+                                      selectedCRM = pharmacyToCRMMap[selectedPharmacy] ?? 'CRM';
+                                    });
+                                  },
+                                  value: selectedPharmacy,
+                                ),
+                              ),
+                            ),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          InputField(
-                            textController: crmController,
-                            validatorFunction: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Veuillez entrer le Code';
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.name,
-                            label: "Code client CRM",
-                            prefixIcon: Icons.group,
+                          Container(
+                            width: screenWidth,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(
+                                color: const Color(0xff273085),
+                                width: 1,
+                              ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: Center(
+                                child: DropdownButton<String>(
+                                  dropdownColor: Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                  icon: Padding(
+                                    padding: const EdgeInsets.only(
+                                      right: 10,
+                                    ),
+                                    child: Transform.rotate(
+                                      angle: 90 * pi / 180,
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xff273085),
+                                      ),
+                                    ),
+                                  ),
+                                  items: pharmacyToCRMMap.values.toSet().map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                      ).copyWith(left: 10),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "$e ",
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              color: const Color(0xff273085),
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )).toList(),
+                                  onChanged: (selection) {
+                                    setState(() {
+                                      selectedCRM = selection!;
+                                    });
+                                  },
+                                  value: selectedCRM,
+                                ),
+                              ),
+                            ),
                           ),
                           const SizedBox(
                             height: 10,
@@ -206,12 +312,12 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                             textController: emailController,
                             validatorFunction: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Email';
+                                return 'email';
                               }
                               return null;
                             },
                             keyboardType: TextInputType.name,
-                            label: "Email",
+                            label: "email",
                             prefixIcon: Icons.group,
                           ),
                           const SizedBox(
@@ -291,7 +397,7 @@ class _UserFormulaireTwoState extends State<UserFormulaireTwo> {
                       strokeColor: Colors.transparent,
                       txtColor: Colors.white,
                       onPressed: () async {
-                        updateUserInfo(); // Call the updateUserInfo function
+                        updateUserInfo();
                       },
                     ),
                   ],

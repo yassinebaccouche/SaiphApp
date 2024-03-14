@@ -5,12 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../Models/user.dart'as model;
+import '../Models/user.dart' as model;
 
-
-class AuthMethodes{
+class AuthMethodes {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   Future<model.User> getUserDetails() async {
     User currentUser = _auth.currentUser!;
 
@@ -19,6 +19,7 @@ class AuthMethodes{
 
     return model.User.fromSnap(documentSnapshot);
   }
+
   Future<String> SignUPUser({
     required String email,
     required String password,
@@ -32,24 +33,24 @@ class AuthMethodes{
     required String FullScore,
     required String PuzzleScore,
     required String CodeClient,
-
-  })async{
+  }) async {
     String res = "some error occurred";
-    try{
+    try {
       if (email.isNotEmpty ||
           password.isNotEmpty ||
           pseudo.isNotEmpty ||
           Profession.isNotEmpty ||
           phoneNumber.isNotEmpty ||
           pharmacy.isNotEmpty ||
-          Datedenaissance.isNotEmpty||
-
-          file != null){
-        UserCredential cred = await _auth.createUserWithEmailAndPassword(
+          Datedenaissance.isNotEmpty ||
+          file != null) {
+        UserCredential cred =
+        await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
-        String photoUrl = await StorageMethods().uploadImageToStorage('profilePics', file, false);
+        String photoUrl = await StorageMethods()
+            .uploadImageToStorage('profilePics', file, false);
 
         //add user to database
         model.User user = model.User(
@@ -59,37 +60,30 @@ class AuthMethodes{
           followers: [],
           following: [],
           photoUrl: photoUrl,
-          pharmacy:pharmacy,
-          phoneNumber:phoneNumber,
-          Profession:Profession,
+          pharmacy: pharmacy,
+          phoneNumber: phoneNumber,
+          Profession: Profession,
           Datedenaissance: Datedenaissance,
           Verified: Verified,
           FullScore: FullScore,
           PuzzleScore: PuzzleScore,
           CodeClient: CodeClient,
         );
-        await _firestore.collection('users').doc(cred.user!.uid).set(user.toJson()
-        );
+        await _firestore
+            .collection('users')
+            .doc(cred.user!.uid)
+            .set(user.toJson());
 
-        // await _firestore.collection('users').add({
-        // 'pseudo': pseudo,
-        //'uid': cred.user!.uid,
-
-        //'email': email,
-
-        //'followers': [],
-        //'following': [],
-        //});
         res = "success";
       } else {
         res = "Please enter all the fields";
       }
-
-    }catch(err){
-      res= err.toString();
+    } catch (err) {
+      res = err.toString();
     }
     return res;
   }
+
   Future<String> updateUser({
     required String pseudo,
     required String Profession,
@@ -111,9 +105,9 @@ class AuthMethodes{
           return "File is null";
         }
 
-        // If a new email is provided, update the email
+        // If a new email is provided, update the email in authentication
         if (newEmail != null && newEmail.isNotEmpty) {
-          await currentUser.updateEmail(newEmail);
+          await currentUser.verifyBeforeUpdateEmail(newEmail);
         }
 
         // If a new password is provided, update the password
@@ -129,12 +123,15 @@ class AuthMethodes{
           'pharmacy': pharmacy,
           'Datedenaissance': Datedenaissance,
           'Verified': Verified,
-          'email': newEmail,
           'CodeClient': CodeClient,
+          'email':newEmail,
         };
 
         // Update the user's data in Firestore
-        await _firestore.collection('users').doc(currentUser.uid).update(updatedUserData);
+        await _firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .update(updatedUserData);
 
         return "success";
       } else {
@@ -145,31 +142,77 @@ class AuthMethodes{
       return "Some error occurred";
     }
   }
+
   Future<String> loginUser({
     required String email,
     required String password,
   }) async {
-    String res = "Some error Occurred";
     try {
-      if (email.isNotEmpty || password.isNotEmpty) {
-        // logging in user with email and password
-        await _auth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-        res = "success";
-        print("sucess");
+      if (email.isEmpty || password.isEmpty) {
+        return "Please enter all the fields";
+      }
+
+      // Logging in user with email and password
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Retrieve user data from Firestore
+      DocumentSnapshot userSnapshot = await _firestore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      // Check if the account is deactivated
+      if (userSnapshot.exists && userSnapshot['isDeactivated'] == true) {
+        // If the account is deactivated, sign out the user and return an error message
+        await _auth.signOut();
+        return "Your account is deactivated. Please contact support for assistance.";
       } else {
-        res = "Please enter all the fields";
+        // If the account is not deactivated, return success
+        return "success";
       }
     } catch (err) {
-      return err.toString();
+      print("Error during login: $err");
+      return "An error occurred while logging in";
     }
-    return res;
   }
+
   Future<void> signOut() async {
     await _auth.signOut();
   }
 
+  Future<String> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return "Password reset email sent successfully";
+    } catch (error) {
+      print("Error sending reset password email: $error");
+      return "Failed to send password reset email";
+    }
+  }
 
+  Future<String> deactivateAccount() async {
+    try {
+      User? currentUser = _auth.currentUser;
+
+      if (currentUser != null) {
+        // Mark the user as deactivated in Firestore
+        await _firestore.collection('users').doc(currentUser.uid).update({
+          'isDeactivated': true,
+        });
+
+        // Sign out the user
+        await _auth.signOut();
+
+        return "Account deactivated successfully";
+      } else {
+        return "User not logged in";
+      }
+    } catch (err) {
+      print("Error during account deactivation: $err");
+      return "Failed to deactivate account";
+    }
+  }
 }

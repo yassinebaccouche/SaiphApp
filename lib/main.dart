@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:saiphappfinal/Screens/SignInScreen.dart';
 import 'package:saiphappfinal/Screens/user_formulaire_one.dart';
+import 'package:saiphappfinal/Screens/user_formulaire_two.dart';
 import 'package:saiphappfinal/providers/user_provider.dart';
 import 'package:saiphappfinal/utils/games_utils/inject_dependencies.dart';
 import 'package:saiphappfinal/Screens/Splash.dart';

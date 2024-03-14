@@ -1,15 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:saiphappfinal/Screens/NotificationPage.dart';
-import 'package:saiphappfinal/Screens/display_notif.dart';
+import 'package:saiphappfinal/Screens/SignInScreen.dart';
 import 'package:saiphappfinal/Screens/profile_screen.dart';
 import 'package:saiphappfinal/Screens/search_screen.dart';
 import 'package:saiphappfinal/resources/auth-methode.dart';
 import 'package:saiphappfinal/resources/firestore_methods.dart';
 import 'package:saiphappfinal/widgets/profile_container.dart';
 import 'package:provider/provider.dart';
-import 'package:saiphappfinal/Screens/SignInScreen.dart';
 import '../providers/user_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -140,8 +138,6 @@ class SettingsScreen extends StatelessWidget {
                         ));
                       },
                     ),
-
-
                     SizedBox(
                       height: 10,
                     ),
@@ -155,12 +151,25 @@ class SettingsScreen extends StatelessWidget {
                         ));
                       },
                     ),
-
                     SizedBox(
                       height: 10,
                     ),
-
-
+                    ProfileButton(
+                      screenWidth,
+                      "Desactivate account",
+                      const SizedBox(),
+                          () async {
+                        await AuthMethodes().deactivateAccount();
+                        // Navigate back to the previous screen or any desired screen
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignInScreen()), // Replace SignInScreen with your actual sign-in screen
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     ProfileButton(
                       screenWidth,
                       "Déconnexion",
@@ -176,7 +185,6 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-
               ),
             ],
           ),

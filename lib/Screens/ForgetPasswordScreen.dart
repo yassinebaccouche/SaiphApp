@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saiphappfinal/Screens/SignInScreen.dart';
+import 'package:saiphappfinal/resources/auth-methode.dart'; // Import your AuthMethodes class
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({Key? key}) : super(key: key);
@@ -9,8 +10,9 @@ class ForgetPasswordPage extends StatefulWidget {
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
-  bool _isPasswordObscured = true;
   bool _isLoading = false;
+  TextEditingController _emailController = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // Add this line
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         width: double.infinity,
         child: Container(
           width: double.infinity,
-          height: 1050 * fem,
+          height: double.infinity, // Use double.infinity for full screen height
           decoration: BoxDecoration(
             color: Color(0xffffffff),
             image: DecorationImage(
@@ -41,8 +43,8 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                     width: 180.78 * fem,
                     height: 70.81 * fem,
                     child: Image.asset(
-                      'assets/accroche-adol-1.png',
-                      fit: BoxFit.cover,
+                      'assets/logo.png',
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
@@ -50,92 +52,108 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
               Center(
                 child: Container(
-                  width: 280 * fem,
-                  height: 270 * fem,
+                  width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(40),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(40.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Center(child: Text('Please Enter your Email To update your Password' ,style: TextStyle(
-                      fontSize: 16 * ffem,
-                      color: Color(0xff273085),
-                    ),),
-                        ),
-                        // Email Input Field
-                        SizedBox(height: 25),
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
+                    padding: EdgeInsets.all(20.0 * fem), // Adjust padding
+                    child: Form( // Wrap your widgets with Form widget
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Veuillez entrer votre e-mail pour mettre à jour votre mot de passe',
+                            style: TextStyle(
+                              fontSize: 16 * ffem,
+                              color: Color(0xff273085),
+                            ),
+                            textAlign: TextAlign.center, // Center text
+                          ),
+                          SizedBox(height: 25 * fem),
+
+                          TextFormField( // Use TextFormField for validation
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              hintText: 'Email',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez entrer l\'identifiant';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 20 * fem),
+
+                          SizedBox(height: 30 * fem),
+
+                          Container(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 15 * fem), // Adjust button padding
+                                backgroundColor: Color(0xff156dc7),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50 * fem),
+                                ),
+                                elevation: 2 * fem,
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  String email = _emailController.text.trim();
+                                  String result = await AuthMethodes().resetPassword(email);
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(result),
+                                  ));
+                                }
+                              },
+                              child: _isLoading
+                                  ? CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                                  : Text(
+                                'Envoyer',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontFamily: 'Inter',
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 6),
-                        // Password Input Field
+                          SizedBox(height: 15 * fem),
 
-
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: GestureDetector(
+                          GestureDetector(
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => SignInScreen(),
                               ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 135.0), // Adjust left padding as needed
-                              child: Text(
-                                'retour Sign In page',
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  fontFamily: 'Inter',
-                                  color: Colors.grey,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 30),
-                        // Sign In Button
-                        Container(
-                          width: 120 * fem,
-                          child: ElevatedButton(
-
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff273085),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50 * fem),
-                              ),
-                              elevation: 2 * fem,
-                            ),
-                            onPressed: () {
-                              // Add your sign-in logic here
-                            },
-                            child: !_isLoading
-                                ? const Text(
-                              'Envoyer',
+                            child: Text(
+                              'Retour à la page de connexion',
                               style: TextStyle(
-                                fontSize: 16.0,
+                                fontSize: 12.0,
                                 fontFamily: 'Inter',
-                                color: Colors.white,
+                                color: Colors.grey,
                               ),
-                            )
-                                : CircularProgressIndicator(
-                              color: Colors.blue,
-
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

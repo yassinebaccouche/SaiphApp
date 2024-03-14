@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,16 +9,16 @@ import 'package:saiphappfinal/Screens/Quiz/model/question_model.dart';
 import 'package:saiphappfinal/Screens/Quiz/screens/result_screen/result_screen.dart';
 import 'package:saiphappfinal/Screens/Quiz/screens/welcome_screen.dart';
 
-class QuizController extends GetxController{
+class QuizController extends GetxController {
   String name = '';
-  BuildContext? context=null;
+  BuildContext? context = null;
+
   //question variables
   int get countOfQuestion => _questionsList.length;
-  final List<QuestionModel> _questionsList = [
+  List<QuestionModel> _questionsList = [
     QuestionModel(
       id: 1,
-      question:
-      "La dose journalière maximale de ADOL est de:",
+      question: "La dose journalière maximale de ADOL est de:",
       answer: 2,
       options: [' 3G', ' 4G', ' 5G'],
     ),
@@ -25,41 +26,59 @@ class QuizController extends GetxController{
       id: 2,
       question: "L’intervalle à respecter entre les prises d’ADOL1000 est de :",
       answer: 2,
-      options: [' 2h minimum', ' 4h minimum',' 6h minimum'],
+      options: [' 2h minimum', ' 4h minimum', ' 6h minimum'],
     ),
     QuestionModel(
       id: 3,
       question: "ADOL EXTRA:",
       answer: 3,
-      options: [' Contient du Paracétamol + Tramadol', ' La boite est de couleur Jaune', ' Le seul Paracétamol Caféiné en Tunisie qui contient 20 Comprimés pour une meilleure observance'],
+      options: [
+        ' Contient du Paracétamol + Tramadol',
+        ' La boite est de couleur Jaune',
+        ' Le seul Paracétamol Caféiné en Tunisie qui contient 20 Comprimés pour une meilleure observance'
+      ],
     ),
     QuestionModel(
       id: 4,
-      question: "DYSFEN® la Flurbiprofène de SAIPH est considéré comme le meilleur traitement efficace contre les règles douloureuses Versus tous les AINS:",
+      question:
+      "DYSFEN® la Flurbiprofène de SAIPH est considéré comme le meilleur traitement efficace contre les règles douloureuses Versus tous les AINS:",
       answer: 1,
       options: [' OUI', ' NON'],
     ),
     QuestionModel(
       id: 5,
-      question: "DYSFEN® la Flurbiprofène de SAIPH est un Anti-inflammatoire non stéroïdien (AINS) avec une activité:",
+      question:
+      "DYSFEN® la Flurbiprofène de SAIPH est un Anti-inflammatoire non stéroïdien (AINS) avec une activité:",
       answer: 3,
-      options: [' Antalgique', 'Anti-inflammatoire', 'Antalgique, Anti-inflammatoire & Antipyrétique'],
+      options: [
+        ' Antalgique',
+        'Anti-inflammatoire',
+        'Antalgique, Anti-inflammatoire & Antipyrétique'
+      ],
     ),
     QuestionModel(
       id: 6,
       question: "DYSFEN® la Flurbiprofène de SAIPH est indiqué dans:",
       answer: 2,
-      options: [' Les Dysménorrhées (Les règles douloureuses)', ' Les Dysménorrhées, l’angine et les infections Rhumatismales'],
+      options: [
+        ' Les Dysménorrhées (Les règles douloureuses)',
+        ' Les Dysménorrhées, l’angine et les infections Rhumatismales'
+      ],
     ),
     QuestionModel(
       id: 7,
-      question: "Dans votre pratique quotidienne, L’avantage d’utilisation de « Vita D3 ®» de SAIPH par rapport à son concurrent direct Vitamine D3 B.O.N ® d’Opalia :",
+      question:
+      "Dans votre pratique quotidienne, L’avantage d’utilisation de « Vita D3 ®» de SAIPH par rapport à son concurrent direct Vitamine D3 B.O.N ® d’Opalia :",
       answer: 1,
-      options: [' Présence du Code-barres & d’une vignette', ' Présence d’une vignette'],
+      options: [
+        ' Présence du Code-barres & d’une vignette',
+        ' Présence d’une vignette'
+      ],
     ),
     QuestionModel(
       id: 8,
-      question: "La Vita B12® de SAIPH est la seule vitamine B12 disponible sur le marché tunisien :",
+      question:
+      "La Vita B12® de SAIPH est la seule vitamine B12 disponible sur le marché tunisien :",
       answer: 1,
       options: [' VRAI', ' FAUX'],
     ),
@@ -75,57 +94,103 @@ class QuizController extends GetxController{
       answer: 1,
       options: [' VRAI', ' FAUX'],
     ),
-
-
-
+    QuestionModel(
+      id: 11,
+      question: "Quels sont les composants de D-mannosa ?",
+      answer: 3,
+      options: [
+        ' Canneberge',
+        ' D-mannose',
+        ' Association de Canneberge et de D-mannose'
+      ],
+    ),
+    QuestionModel(
+      id: 12,
+      question: "Quel est le nombre de sachets dans la boite de D-mannosa ?",
+      answer: 1,
+      options: [' 14', ' 20', ' 10'],
+    ),
+    QuestionModel(
+      id: 13,
+      question: "Quel est le goût Faloxim PPS ?",
+      answer: 3,
+      options: [' Orange', ' Pêche', ' Fraise'],
+    ),
+    QuestionModel(
+      id: 14,
+      question: "Est-ce que Flutica est base de remboursement CNAM ?",
+      answer: 1,
+      options: [' OUI', ' NON'],
+    ),
+    QuestionModel(
+      id: 15,
+      question:
+      "SAIFOXYL 1g BTE 24 est l’unique boite d’Amoxicilline avec 24 comprimés ?",
+      answer: 1,
+      options: [' OUI', ' NON'],
+    ),
+    QuestionModel(
+      id: 16,
+      question: "SAIFOXYL PPS est délicieux grâce à son goût",
+      answer: 1,
+      options: [
+        ' Cocktail pêche+ abricot+ orange',
+        ' Fraise',
+        ' Orange',
+      ],
+    ),
+    QuestionModel(
+      id: 17,
+      question: "AIRGIX est disponible en combien de présentations ?",
+      answer: 1,
+      options: [
+        ' 3: BTE 10, BTE 20, BTE 30',
+        ' 2: BTE 10 et BTE 20',
+        ' 1 seule BTE 10',
+      ],
+    ),
+    QuestionModel(
+      id: 18,
+      question:
+      "OROKEN est le seul céfixime qui dispose de la boite de 8 comprimés ?",
+      answer: 1,
+      options: [' Oui', ' Non'],
+    ),
+    QuestionModel(
+      id: 19,
+      question: "Quelle est la DCI de CIPROSAIPH ?",
+      answer: 1,
+      options: [' Ciprofloxacine', ' Levofloxacine', ' Amoxicilline '],
+    ),
+    QuestionModel(
+      id: 20,
+      question: "Quelles sont les présentations de BIOGYL ?",
+      answer: 1,
+      options: [' Bte 10 ET BTE 20', ' BTE 10'],
+    ),
   ];
-
-  List<QuestionModel> get questionsList => [..._questionsList];
-
+  List<QuestionModel> get questionsList => [... _questionsList];
 
   bool _isPressed = false;
-
-
-  bool get isPressed => _isPressed; //To check if the answer is pressed
-
+  bool get isPressed => _isPressed;
 
   double _numberOfQuestion = 1;
-
-
   double get numberOfQuestion => _numberOfQuestion;
 
-
   int? _selectAnswer;
-
-
   int? get selectAnswer => _selectAnswer;
 
-
   int? _correctAnswer;
-
-
   int _countOfCorrectAnswers = 0;
-
-
   int get countOfCorrectAnswers => _countOfCorrectAnswers;
 
-  //map for check if the question has been answered
-  final Map<int, bool> _questionIsAnswerd = {};
+  final Map<int, bool> _questionIsAnswered = {};
 
-
-  //page view controller
   late PageController pageController;
 
-  //timer
   Timer? _timer;
-
-
   final maxSec = 15;
-
-
   final RxInt _sec = 15.obs;
-
-
   RxInt get sec => _sec;
 
   @override
@@ -141,9 +206,8 @@ class QuizController extends GetxController{
     super.onClose();
   }
 
-  //get final score
   int get scoreResult {
-    return _countOfCorrectAnswers ;
+    return _countOfCorrectAnswers;
   }
 
   void checkAnswer(QuestionModel questionModel, int selectAnswer) {
@@ -156,30 +220,36 @@ class QuizController extends GetxController{
       _countOfCorrectAnswers++;
     }
     stopTimer();
-    _questionIsAnswerd.update(questionModel.id, (value) => true);
-    Future.delayed(const Duration(milliseconds: 500)).then((value) => nextQuestion());
+    _questionIsAnswered.update(questionModel.id, (value) => true);
+    Future.delayed(const Duration(milliseconds: 500))
+        .then((value) => nextQuestion());
     update();
   }
 
-  //check if the question has been answered
   bool checkIsQuestionAnswered(int quesId) {
-    return _questionIsAnswerd.entries
+    return _questionIsAnswered.entries
         .firstWhere((element) => element.key == quesId)
         .value;
   }
 
   void nextQuestion() {
-    if (_timer != null || _timer!.isActive) {
+    if (_timer != null && _timer!.isActive) {
       stopTimer();
     }
 
     if (pageController.page == _questionsList.length - 1) {
-      //Get.offAndToNamed('/result_screen1');
-      Navigator.pushReplacement(context!, MaterialPageRoute(builder: (context) => ResultScreen(),));
+      Navigator.pushReplacement(
+        context!,
+        MaterialPageRoute(
+          builder: (context) => ResultScreen(),
+        ),
+      );
     } else {
       _isPressed = false;
       pageController.nextPage(
-          duration: const Duration(milliseconds: 500), curve: Curves.linear);
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.linear,
+      );
 
       startTimer();
     }
@@ -187,15 +257,22 @@ class QuizController extends GetxController{
     update();
   }
 
-  //called when start again quiz
   void resetAnswer() {
+    _questionIsAnswered.clear();
     for (var element in _questionsList) {
-      _questionIsAnswerd.addAll({element.id: false});
+      _questionIsAnswered[element.id] = false;
     }
+    _countOfCorrectAnswers = 0;
+    _selectAnswer = null;
+    _correctAnswer = null;
+    _sec.value = maxSec;
+    _numberOfQuestion = 1;
+    _isPressed = false;
+    _questionsList.shuffle(Random());
+    _questionsList = _questionsList.sublist(0, 10);
     update();
   }
 
-  //get right and wrong color
   Color getColor(int answerIndex) {
     if (_isPressed) {
       if (answerIndex == _correctAnswer) {
@@ -208,7 +285,6 @@ class QuizController extends GetxController{
     return Color(0xFF273085);
   }
 
-  //het right and wrong icon
   IconData getIcon(int answerIndex) {
     if (_isPressed) {
       if (answerIndex == _correctAnswer) {
@@ -235,12 +311,14 @@ class QuizController extends GetxController{
 
   void resetTimer() => _sec.value = maxSec;
 
-  void stopTimer() => _timer!.cancel();
-  //call when start again quiz
+  void stopTimer() => _timer?.cancel();
   void startAgain() {
     _correctAnswer = null;
     _countOfCorrectAnswers = 0;
     resetAnswer();
     _selectAnswer = null;
+    _questionsList.shuffle(Random());
+    _questionsList = _questionsList.sublist(0, 10);
+    update();
   }
 }
