@@ -17,10 +17,12 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       Duration(seconds: 4), // Adjust the duration as needed
           () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => SignInScreen()), // Replace SignInScreen() with the screen you want to navigate to
-        );
+        if(mounted){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SignInScreen()), // Replace SignInScreen() with the screen you want to navigate to
+          );
+        }
       },
     );
   }

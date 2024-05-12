@@ -15,7 +15,7 @@ class AuthMethodes {
     User currentUser = _auth.currentUser!;
 
     DocumentSnapshot documentSnapshot =
-    await _firestore.collection('users').doc(currentUser.uid).get();
+        await _firestore.collection('users').doc(currentUser.uid).get();
 
     return model.User.fromSnap(documentSnapshot);
   }
@@ -44,8 +44,7 @@ class AuthMethodes {
           pharmacy.isNotEmpty ||
           Datedenaissance.isNotEmpty ||
           file != null) {
-        UserCredential cred =
-        await _auth.createUserWithEmailAndPassword(
+        UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -117,6 +116,7 @@ class AuthMethodes {
 
         // Create a map with updated user data (excluding email and password)
         Map<String, dynamic> updatedUserData = {
+          'lastLogin': DateUtils.dateOnly(DateTime.now()),
           'pseudo': pseudo,
           'Profession': Profession,
           'phoneNumber': phoneNumber,
@@ -124,7 +124,7 @@ class AuthMethodes {
           'Datedenaissance': Datedenaissance,
           'Verified': Verified,
           'CodeClient': CodeClient,
-          'email':newEmail,
+          'email': newEmail,
         };
 
         // Update the user's data in Firestore

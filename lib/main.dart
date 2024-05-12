@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
                           // Create a CustomAppUser.User object from Firestore data
                           CustomAppUser.User? userData = CustomAppUser.User.fromSnap(snapshot.data!);
                           if (userData != null && userData.Verified == '1') {
-                            return ResponsiveLayout(
+                            return const ResponsiveLayout(
                               mobileScreenLayout: MobileScreenLayout(),
                               webScreenLayout: WebScreenLayout(),
                             );
