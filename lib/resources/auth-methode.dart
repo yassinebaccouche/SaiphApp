@@ -53,6 +53,7 @@ class AuthMethodes {
 
         //add user to database
         model.User user = model.User(
+          lastLogin: DateUtils.dateOnly(DateTime.now()).millisecondsSinceEpoch,
           pseudo: pseudo,
           uid: cred.user!.uid,
           email: email,
@@ -116,7 +117,7 @@ class AuthMethodes {
 
         // Create a map with updated user data (excluding email and password)
         Map<String, dynamic> updatedUserData = {
-          'lastLogin': DateUtils.dateOnly(DateTime.now()),
+          'lastLogin': DateUtils.dateOnly(DateTime.now()).millisecondsSinceEpoch,
           'pseudo': pseudo,
           'Profession': Profession,
           'phoneNumber': phoneNumber,
@@ -215,4 +216,36 @@ class AuthMethodes {
       return "Failed to deactivate account";
     }
   }
+
+  Future<String> updateLastLoginAndScore({
+    required String score,
+  }) async {
+    try {
+      User? currentUser = _auth.currentUser;
+
+      if (currentUser != null) {
+
+        // Create a map with updated user data (excluding email and password)
+        Map<String, dynamic> updatedUserData = {
+          'lastLogin': DateUtils.dateOnly(DateTime.now()).millisecondsSinceEpoch,
+          'FullScore': score,
+
+        };
+
+        // Update the user's data in Firestore
+        await _firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .update(updatedUserData);
+
+        return "success";
+      } else {
+        return "User not logged in";
+      }
+    } catch (err) {
+      print("Error during user update: $err");
+      return "Some error occurred";
+    }
+  }
+
 }

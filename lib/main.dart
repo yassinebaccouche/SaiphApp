@@ -9,6 +9,7 @@ import 'package:saiphappfinal/Screens/SignInScreen.dart';
 import 'package:saiphappfinal/Screens/user_formulaire_one.dart';
 import 'package:saiphappfinal/Screens/user_formulaire_two.dart';
 import 'package:saiphappfinal/providers/user_provider.dart';
+import 'package:saiphappfinal/services/notifservice.dart';
 import 'package:saiphappfinal/utils/games_utils/inject_dependencies.dart';
 import 'package:saiphappfinal/Screens/Splash.dart';
 
@@ -25,6 +26,8 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await injectDependencies();
+  await LocalNotificationService().setup();
+
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -75,8 +78,8 @@ class MyApp extends StatelessWidget {
                         if (snapshot.hasData) {
                           // Create a CustomAppUser.User object from Firestore data
                           CustomAppUser.User? userData = CustomAppUser.User.fromSnap(snapshot.data!);
-                          if (userData != null && userData.Verified == '1') {
-                            return const ResponsiveLayout(
+                         if (userData != null && userData.Verified == '1') {
+                            return  ResponsiveLayout(
                               mobileScreenLayout: MobileScreenLayout(),
                               webScreenLayout: WebScreenLayout(),
                             );

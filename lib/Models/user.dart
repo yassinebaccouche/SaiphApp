@@ -11,6 +11,7 @@ class User {
   final String pharmacy;
   final String Profession;
   final List followers;
+  final int? lastLogin;
   final List following;
   final String Verified;
   String FullScore; // Change from final to regular instance variable
@@ -19,6 +20,7 @@ class User {
 
   User({
     required this.pseudo,
+    required this.lastLogin,
     required this.uid,
     required this.photoUrl,
     required this.email,
@@ -39,6 +41,7 @@ class User {
 
     return User(
       pseudo: snapshot["pseudo"],
+      lastLogin: snapshot["lastLogin"],
       uid: snapshot["uid"],
       email: snapshot["email"],
       Datedenaissance: snapshot["Datedenaissance"],
