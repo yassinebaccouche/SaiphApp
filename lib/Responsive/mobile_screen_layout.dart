@@ -52,8 +52,8 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           showNotification = true;
         }
       }
-    }else{
-      showNotification=false;
+    } else {
+      showNotification = false;
     }
     // update user lastlogin and score
     AuthMethodes().updateLastLoginAndScore(score: userScore.toString());

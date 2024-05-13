@@ -12,7 +12,7 @@ import 'package:saiphappfinal/providers/user_provider.dart';
 import 'package:saiphappfinal/services/notifservice.dart';
 import 'package:saiphappfinal/utils/games_utils/inject_dependencies.dart';
 import 'package:saiphappfinal/Screens/Splash.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'package:saiphappfinal/Responsive/mobile_screen_layout.dart';
 import 'package:saiphappfinal/Responsive/responsive_layout_screen.dart';
 import 'package:saiphappfinal/Responsive/web_screen_layout.dart';
@@ -27,6 +27,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await injectDependencies();
   await LocalNotificationService().setup();
+  await Permission.notification.isDenied.then((value) {
+    if (value) {
+      Permission.notification.request();
+    }
+  });
 
   if (kIsWeb) {
     await Firebase.initializeApp(
